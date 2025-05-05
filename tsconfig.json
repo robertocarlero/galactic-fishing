@@ -11,6 +11,11 @@
       "@assets/*": ["src/assets/*"],
       "types/*": ["src/types/*"],
       "api": ["src/api/index.ts"]
-    }
+    },
+    "types": [
+      "astro/client",
+      "vite-plugin-pwa/vanillajs",
+      "vite-plugin-pwa/info"
+    ]
   }
 }

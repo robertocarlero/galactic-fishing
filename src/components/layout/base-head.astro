@@ -1,10 +1,12 @@
 ---
 import { Head } from "astro-capo";
+
+import { pwaInfo } from "virtual:pwa-info";
+import { pwaAssetsHead } from "virtual:pwa-assets/head";
 ---
 
 <Head>
   <meta charset="utf-8" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width" />
   <meta name="generator" content={Astro.generator} />
   <title>Galactic Fishing</title>
@@ -12,4 +14,12 @@ import { Head } from "astro-capo";
     name="description"
     content="Galactic Fishing Game is a site where you see the positions of the fishers and the market items."
   />
+  {
+    pwaAssetsHead.themeColor && (
+      <meta name="theme-color" content={pwaAssetsHead.themeColor.content} />
+    )
+  }
+  {pwaAssetsHead.links.map((link) => <link {...link} />)}
+  {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+  <script src="/src/pwa.ts"></script>
 </Head>
