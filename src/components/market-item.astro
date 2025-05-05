@@ -1,0 +1,59 @@
+---
+import type { ImageMetadata } from "astro";
+import type { MarketItem } from "types/market";
+
+import Avatar from "@components/ui/avatar";
+
+import EnhancedImgSrc from "@assets/images/enhanced.png";
+import StealImgSrc from "@assets/images/steal.png";
+import DelayImgSrc from "@assets/images/delay.png";
+import RecoveryImgSrc from "@assets/images/recovery.png";
+import RevealImgSrc from "@assets/images/reveal.png";
+
+const imageByType: Record<string, ImageMetadata | undefined> = {
+  fishing_rod: EnhancedImgSrc,
+  poison_leveling: StealImgSrc,
+  poison_delay: DelayImgSrc,
+  poison_recovery: RecoveryImgSrc,
+  poison_reveal_fishes: RevealImgSrc,
+};
+
+interface Props {
+  data: MarketItem;
+}
+
+const { data } = Astro.props;
+
+const {
+  name = "Unknown Item",
+  type = "unknown",
+  description = "No description available.",
+  cost = "N/A",
+} = data || {};
+
+const imageSrc = imageByType[type];
+const fallbackText =
+  name?.substring(0, 2)?.toUpperCase() ||
+  type?.substring(0, 2)?.toUpperCase() ||
+  "??";
+---
+
+<div
+  class="flex justify-between items-end p-4 border border-gray-200 rounded-lg shadow-md bg-white"
+>
+  <div class="flex items-center overflow-hidden mr-2">
+    <Avatar
+      src={imageSrc?.src}
+      alt={name || type}
+      fallbackText={fallbackText}
+      class="mr-4 h-12 w-12 shadow-md shrink-0"
+    />
+    <div class="min-w-0">
+      <h2 class="font-bold text-gray-900 truncate">{name}</h2>
+      <p class="mt-1 text-sm text-gray-500 line-clamp-2">{description}</p>
+    </div>
+  </div>
+  <div class="h-full shrink-0 ml-2">
+    <p class="font-semibold text-gray-800">{cost}</p>
+  </div>
+</div>

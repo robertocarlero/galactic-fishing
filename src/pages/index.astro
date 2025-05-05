@@ -1,6 +1,7 @@
 ---
 import Layout from "@components/layout";
 import LeaderBoard from "@components/leader-board.astro";
+import Market from "@components/market.astro";
 import { Tabs, TabPanel } from "@components/ui/tabs";
 
 const TABS = {
@@ -28,7 +29,7 @@ const TABS_ARRAY = Object.values(TABS);
       <LeaderBoard />
     </TabPanel>
     <TabPanel tabId={TABS.market.id}>
-      <h2 class="text-xl font-semibold mb-2">Market</h2>
+      <Market />
     </TabPanel>
   </Tabs>
 </Layout>

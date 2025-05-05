@@ -1,0 +1,27 @@
+---
+import { getMarketItems } from "api";
+
+import MarketItem from "./market-item.astro";
+
+const { items, error: fetchError } = await getMarketItems();
+---
+
+<div class="w-full flex flex-col gap-2">
+  {
+    fetchError && (
+      <div class="p-4 border rounded-lg bg-red-100 border-red-200 text-red-700 text-center">
+        <p>Error loading market items. Please try again later.</p>
+      </div>
+    )
+  }
+
+  {
+    !fetchError && items.length === 0 && (
+      <div class="p-4 border rounded-lg bg-gray-50 border-gray-200 text-gray-500 text-center">
+        <p>No market items available at the moment.</p>
+      </div>
+    )
+  }
+
+  {!fetchError && items.map((item) => <MarketItem data={item} />)}
+</div>
