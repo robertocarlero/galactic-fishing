@@ -1,0 +1,80 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import TabButton from "./tab-button.astro";
+
+interface Tab {
+  id: string;
+  label: string;
+}
+
+interface Props extends HTMLAttributes<"div"> {
+  tabs: Tab[];
+  initialTabId?: string;
+  panelsClass?: string;
+  tabsNavClass?: string;
+}
+
+const {
+  tabs,
+  initialTabId,
+  class: containerClass,
+  panelsClass,
+  tabsNavClass = "bg-gray-200 p-1 rounded-lg",
+  ...rest
+} = Astro.props;
+const activeTabId = initialTabId ?? (tabs.length > 0 ? tabs[0].id : null);
+---
+
+<div
+  class:list={[
+    "tabs-container flex flex-col w-full h-full gap-4",
+    containerClass,
+  ]}
+  {...rest}
+  data-initial-tab={activeTabId}
+>
+  <div
+    class="flex justify-center"
+    role="tablist"
+    aria-label="Tabs buttons container"
+  >
+    <nav
+      class:list={["flex space-x-1 min-w-xs sm:min-w-sm", tabsNavClass]}
+      aria-label="Tabs"
+    >
+      {
+        tabs.map((tab) => (
+          <TabButton {...tab} active={tab.id === activeTabId} />
+        ))
+      }
+    </nav>
+  </div>
+
+  <div class:list={["tab-panels w-full h-full", panelsClass]}>
+    <slot />
+  </div>
+</div>
+
+<script>
+  import { setupTabs } from "./tabs.ts";
+
+  function initializeAllTabs() {
+    document.querySelectorAll(".tabs-container").forEach((container) => {
+      if (!(container as HTMLElement).dataset.tabsInitialized) {
+        setupTabs(container as HTMLElement);
+        (container as HTMLElement).dataset.tabsInitialized = "true";
+      }
+    });
+  }
+
+  initializeAllTabs();
+
+  document.addEventListener("astro:after-swap", initializeAllTabs);
+  document.addEventListener("astro:before-swap", (event) => {
+    (event.target as HTMLElement)
+      .querySelectorAll(".tabs-container")
+      .forEach((container) => {
+        delete (container as HTMLElement).dataset.tabsInitialized;
+      });
+  });
+</script>

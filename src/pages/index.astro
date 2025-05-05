@@ -1,7 +1,28 @@
 ---
 import Layout from "@components/layout";
+import { Tabs, TabPanel } from "@components/ui/tabs";
+
+const TABS = {
+  leaderboard: {
+    id: "leaderboard",
+    label: "Leaderboard",
+  },
+  market: {
+    id: "market",
+    label: "Market",
+  },
+};
+
+const TABS_ARRAY = Object.values(TABS);
 ---
 
-<Layout>
-  <h1 class="text-3xl font-bold underline">Hello, world!</h1>
+<Layout title="Ejemplo de Tabs Corregido">
+  <Tabs tabs={TABS_ARRAY} initialTabId={TABS.leaderboard.id} class="p-6 pt-12">
+    <TabPanel tabId={TABS.leaderboard.id}>
+      <h2 class="text-xl font-semibold mb-2">Leaderboard</h2>
+    </TabPanel>
+    <TabPanel tabId={TABS.market.id}>
+      <h2 class="text-xl font-semibold mb-2">Market</h2>
+    </TabPanel>
+  </Tabs>
 </Layout>

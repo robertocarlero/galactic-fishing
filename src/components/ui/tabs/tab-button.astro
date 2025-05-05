@@ -1,0 +1,30 @@
+---
+type Props = {
+  id: string;
+  label: string;
+  active: boolean;
+};
+
+const { id, label, active } = Astro.props;
+---
+
+<button
+  type="button"
+  role="tab"
+  id={`tab-${id}`}
+  aria-controls={`panel-${id}`}
+  aria-selected={active ? "true" : "false"}
+  data-tab-id={id}
+  class:list={[
+    "tab-button flex-1 text-center whitespace-nowrap",
+    "py-1.5 px-3",
+    "rounded-md",
+    "text-sm font-medium",
+    "transition-all duration-150 ease-in-out",
+    active
+      ? "bg-white text-gray-900 shadow-sm"
+      : "bg-transparent text-gray-600 hover:text-gray-800",
+  ]}
+>
+  {label}
+</button>
