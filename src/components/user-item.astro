@@ -1,0 +1,88 @@
+---
+import type { ImageMetadata } from "astro";
+import type { User } from "types/users";
+
+import Avatar from "@components/ui/avatar";
+
+import goldImgSrc from "@assets/images/gold.png";
+import silverImgSrc from "@assets/images/silver.png";
+import bronzeImgSrc from "@assets/images/bronze.png";
+import { Image } from "astro:assets";
+
+interface Props {
+  data: User;
+}
+
+const { data } = Astro.props;
+
+const {
+  username = "Usuario Desconocido",
+  level = 0,
+  xp = 0,
+  gold: userGold = 0,
+  fishEmojis = "",
+  isInfected = false,
+  emojiDescription = "",
+  rank = null,
+} = data || {};
+
+const firsTwoLetters = username?.substring(0, 2)?.toUpperCase() || "??";
+
+const imageByRank: Record<number, ImageMetadata | undefined> = {
+  1: goldImgSrc,
+  2: silverImgSrc,
+  3: bronzeImgSrc,
+};
+
+const rankImageSrc = rank !== null ? imageByRank[rank] : null;
+
+const avatarSrc = `https://avatar.iran.liara.run/public?username=${firsTwoLetters}`;
+---
+
+<div
+  class:list={[
+    "flex justify-between rounded-xl border shadow-sm p-2 gap-2 overflow-hidden",
+    isInfected ? "bg-red-50 border-red-500" : "bg-white border-gray-200",
+  ]}
+>
+  <div class="flex gap-2 items-center">
+    <Avatar
+      src={avatarSrc}
+      alt={`Avatar de ${username}`}
+      fallbackText={firsTwoLetters}
+      class="w-12 h-12"
+    />
+    <div class="ml-3">
+      <p class="text-gray-900 flex gap-2 items-center">
+        {rank !== null && <b class="shrink-0">#{rank}</b>}
+        <span class="truncate">{username}</span>
+        {
+          rankImageSrc && (
+            <Image
+              src={rankImageSrc}
+              alt={`Rango ${rank}`}
+              class="w-5 h-5 shrink-0"
+              loading="lazy"
+            />
+          )
+        }
+      </p>
+      <div class="mt-1 flex items-center gap-x-2 text-sm text-gray-500">
+        <p>{xp} XP</p>
+        <p>{userGold} Gold</p>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="flex flex-col h-full justify-between items-end gap-1 text-sm text-gray-500"
+  >
+    <p>Level {level}</p>
+    <span
+      class="truncate text-right text-xs sm:text-sm"
+      title={emojiDescription}
+    >
+      {fishEmojis}
+    </span>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+---
+import { getLeaderBoard } from "api";
+
+import UserItem from "@components/user-item.astro";
+import Input from "@components/ui/input.astro";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const containerClasses = `w-full h-full flex flex-col gap-2 ${className || ""}`;
+
+const { items, error: fetchError } = await getLeaderBoard();
+---
+
+<div class:list={containerClasses}>
+  <div class="w-full flex gap-2 mb-2">
+    <Input
+      type="search"
+      placeholder="Search username..."
+      class="w-full"
+      id="leaderboard-search"
+      aria-label="Search leaderboard by username"
+      disabled={fetchError || !items.length}
+    />
+  </div>
+
+  {
+    fetchError && (
+      <p class="text-center text-red-600 py-4">
+        Failed to load leaderboard data.
+      </p>
+    )
+  }
+
+  {
+    !fetchError && items.length === 0 && (
+      <p class="text-center text-gray-500 py-4">
+        Leaderboard is empty or unavailable.
+      </p>
+    )
+  }
+
+  <div id="leaderboard-list" class="flex flex-col gap-2">
+    {
+      !fetchError &&
+        items.map((player) => (
+          <div data-username={player.username.toLowerCase()}>
+            <UserItem data={player} />
+          </div>
+        ))
+    }
+  </div>
+
+  <p id="no-results" class="text-center text-gray-500 py-4 hidden">
+    No users found matching the search.
+  </p>
+</div>
+
+<script>
+  const filterList = () => {
+    const searchInput = document.getElementById(
+      "leaderboard-search",
+    ) as HTMLInputElement | null;
+    const listContainer = document.getElementById("leaderboard-list");
+    const noResultsMessage = document.getElementById("no-results");
+    const allItems =
+      listContainer?.querySelectorAll<HTMLElement>("[data-username]") || [];
+
+    if (!searchInput || !listContainer || !noResultsMessage) return;
+    if (!allItems.length) return;
+
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    allItems.forEach((item) => {
+      const username = item.dataset.username || "";
+      const isMatch = searchTerm === "" || username.includes(searchTerm);
+
+      item.classList.toggle("hidden", !isMatch);
+      if (isMatch) visibleCount++;
+    });
+
+    noResultsMessage.classList.toggle(
+      "hidden",
+      !(visibleCount === 0 && searchTerm !== ""),
+    );
+  };
+
+  document
+    .getElementById("leaderboard-search")
+    ?.addEventListener("input", filterList);
+</script>

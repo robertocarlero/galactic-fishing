@@ -1,0 +1,58 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import AvatarFallback from "./avatar-fallback.astro";
+
+interface Props extends HTMLAttributes<"span"> {
+  src?: string | null | undefined;
+  alt?: string;
+  fallbackText?: string;
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const {
+  src,
+  alt = "Avatar",
+  fallbackText = "",
+  size = "md",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const sizeClasses = {
+  sm: "h-8 w-8",
+  md: "h-10 w-10",
+  lg: "h-14 w-14",
+};
+
+const backgroundURL = src ? `url('${src}')` : "";
+---
+
+<span
+  class:list={[
+    "avatar bg-sky-50",
+    "relative inline-flex shrink-0 overflow-hidden rounded-full align-middle items-center justify-center",
+    sizeClasses[size],
+    className,
+  ]}
+  role="img"
+  aria-label={alt}
+  {...rest}
+>
+  <AvatarFallback text={fallbackText} size={size} />
+</span>
+
+<style define:vars={{ backgroundURL }} lang="scss">
+  .avatar {
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--backgroundURL);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+</style>

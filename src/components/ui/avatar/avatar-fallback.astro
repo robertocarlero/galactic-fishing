@@ -1,0 +1,28 @@
+---
+// src/components/avatar-fallback.astro (Ejemplo)
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"span"> {
+  text: string;
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const { text, size = "md", class: className, ...rest } = Astro.props;
+
+const fallbackBaseClasses =
+  "flex h-full w-full items-center justify-center rounded-full bg-muted text-muted-foreground font-medium";
+
+const fallbackTextSizeClasses = {
+  sm: "text-xs",
+  md: "text-sm",
+  lg: "text-lg",
+};
+---
+
+<span
+  class:list={[fallbackBaseClasses, fallbackTextSizeClasses[size], className]}
+  {...rest}
+>
+  {text}
+</span>

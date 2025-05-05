@@ -1,5 +1,6 @@
 ---
 import Layout from "@components/layout";
+import LeaderBoard from "@components/leader-board.astro";
 import { Tabs, TabPanel } from "@components/ui/tabs";
 
 const TABS = {
@@ -17,9 +18,14 @@ const TABS_ARRAY = Object.values(TABS);
 ---
 
 <Layout title="Ejemplo de Tabs Corregido">
-  <Tabs tabs={TABS_ARRAY} initialTabId={TABS.leaderboard.id} class="p-6 pt-12">
+  <Tabs
+    tabs={TABS_ARRAY}
+    initialTabId={TABS.leaderboard.id}
+    class="py-6 pt-12 p-4 max-w-3xl mx-auto"
+    panelsClass="overflow-auto"
+  >
     <TabPanel tabId={TABS.leaderboard.id}>
-      <h2 class="text-xl font-semibold mb-2">Leaderboard</h2>
+      <LeaderBoard />
     </TabPanel>
     <TabPanel tabId={TABS.market.id}>
       <h2 class="text-xl font-semibold mb-2">Market</h2>
