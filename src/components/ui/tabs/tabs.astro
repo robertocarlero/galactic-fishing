@@ -33,14 +33,11 @@ const activeTabId = initialTabId ?? (tabs.length > 0 ? tabs[0].id : null);
   {...rest}
   data-initial-tab={activeTabId}
 >
-  <div
-    class="flex justify-center"
-    role="tablist"
-    aria-label="Tabs buttons container"
-  >
+  <div class="flex justify-center" aria-label="Tabs buttons container">
     <nav
       class:list={["flex space-x-1 min-w-xs sm:min-w-sm", tabsNavClass]}
       aria-label="Tabs"
+      role="tablist"
     >
       {
         tabs.map((tab) => (
