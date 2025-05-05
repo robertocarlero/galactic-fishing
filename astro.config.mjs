@@ -15,4 +15,7 @@ export default defineConfig({
   integrations: [playformCompress()],
   adapter: netlify(),
   output: "server",
+  image: {
+    domains: ["avatar.iran.liara.run"],
+  },
 });
